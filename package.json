@@ -12,11 +12,15 @@
   "scripts": {
     "dev": "sls offline -s dev",
     "test": "jest",
+    "build": "tsc",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint:fix": "eslint . --fix --ext .ts",
     "tf:init": "cd terraform; terraform init",
-    "tf:validate": "cd terraform; terraform validate"
+    "tf:validate": "cd terraform; terraform validate",
+    "tf:apply": "npm run build; cd terraform; terraform apply; npm run cleanup",
+    "tf:destroy": "cd terraform; terraform destroy",
+    "cleanup": "rm -rf dist/*"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.76",

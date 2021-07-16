@@ -14,42 +14,29 @@ provider "aws" {
 data "archive_file" "init"{
   type  = "zip"
   source_dir = "${path.module}/../dist"
-  output_dir = "${path.module}/../dist/function.zip"
+  output_path = "${path.module}/function.zip"
 }
 
 ## s3 bucket
 
-resource "aws_s3_bucket" "leoBucket" {
-  bucket = "terraformServerless01"
+resource "aws_s3_bucket" "leo-bucket" {
+  bucket = "terraform-serverless01"
   acl = "private"
   tags= {
-    Name = "terraformServerless-1"
+    Name = "terraform-serverless-1"
   }
 }
 
 ## upload zip to s3 bucket
 resource "aws_s3_bucket_object" "object"{
-  bucket = "aws_s3_bucket.leoBucket.id"
+  bucket = aws_s3_bucket.leo-bucket.id
   key = "function.zip"
   source = "${path.module}/function.zip"
 }
 
-## IAM role for lambda
-resource "aws_iam_role" "lambda_role" {
-  name = "lambda_role"
-  assume_role_policy = file("/lambda_assume_role_policy.json")
-}
-
-## IAM role-policy for lambda
-resource "aws_iam_role_policy" "lambda_policy" {
-  name = "lambda_policy"
-  role = aws_iam_role.lambda_role.id
-  policy= file("/lambda_policy.json")
-}
-
 resource "aws_lambda_function" "leo-sendMail"{
-  filename = "sendMail"
-  s3_bucket = aws_s3_bucket.leoBucket.id
+  function_name = "sendMail"
+  s3_bucket = aws_s3_bucket.leo-bucket.id
   s3_key = aws_s3_bucket_object.object.key
   role = aws_iam_role.lambda_role.arn
   handler = "functions/sendMail.handler"

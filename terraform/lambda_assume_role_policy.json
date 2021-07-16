@@ -1,11 +1,13 @@
 {
   "version": "2012-10-17",
-  "statement": [
-    "Action": "sts:AssumeRole",
-    "Principal": {
-      "Service": "lambda.amazonaws.com"
+
+  "statement": {
+    "actions": ["sts:AssumeRole"],
+
+    "principals": {
+      "type"        : "Service",
+      "identifiers" : ["lambda.amazonaws.com"]
     },
-    "Effect": "Allow",
-    "Sid": ""
-  ]
+    "effect" : "Allow"
+  }
 }
