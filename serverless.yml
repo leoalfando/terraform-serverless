@@ -1,0 +1,29 @@
+service: serverlessSetup
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-southeast-1
+
+# functions
+functions:
+  sendMail:
+    handler: src/functions/sendMail.handler
+    events: # The events that trigger this function
+      - http:
+          path: serverlessSetup/sendMail
+          method: post
+# Serverless plugins
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+# Resources your functions use
+resources:
+  Resources:
+    # SNS Topics
+    SNSHelloEvent:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Hello Event Topic
+        TopicName: hello-event
